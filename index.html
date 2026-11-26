@@ -1,29 +1,76 @@
 <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SOSHANGUVE RUSH - Nhlanhla</title><style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}body{background:#f1f5f9}
-.top{background:#111827;color:#fff;padding:14px;text-align:center}.top b{color:#facc15}
-.card{background:#fff;margin:12px;padding:14px;border-radius:14px;box-shadow:0 2px 8px #0002}
-input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:15px}
-.btn{width:100%;padding:15px;border:none;border-radius:12px;font-weight:900;font-size:17px;background:#facc15}
-.price{background:#fef9c3;padding:12px;border-radius:10px;text-align:center;font-weight:900;margin:8px 0}
-.rider{display:flex;justify-content:space-between;background:#fef9c3;padding:12px;border-radius:12px;border:2px solid #facc15}
+<title>SOSHANGUVE RUSH LOGISTICS - Nhlanhla</title>
+<style>*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial}body{background:#0f172a;color:#111}
+.top{background:#0f172a;color:#fff;padding:16px;text-align:center;position:sticky;top:0;z-index:10}.top b{color:#facc15}.top p{color:#94a3b8;font-size:12px}
+.card{background:#fff;margin:12px;padding:16px;border-radius:18px;box-shadow:0 4px 20px #0002}
+input,select{width:100%;padding:13px;margin:7px 0;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#f8fafc}
+label{font-size:13px;font-weight:700;color:#334155}
+.btn{width:100%;padding:15px;border:none;border-radius:14px;font-weight:900;font-size:16px;background:#facc15;cursor:pointer}
+.btn2{background:#0f172a;color:#fff}.btn3{background:#22c55e;color:#fff}
+.price{background:#fef9c3;padding:12px;border-radius:12px;text-align:center;font-weight:900;margin:10px 0}
+.rider{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#fef9c3,#fefce8);padding:14px;border-radius:14px;border:2px solid #facc15}
+.badge{background:#22c55e;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:900}
+.tabs{display:flex;gap:8px;margin:12px}.tab{flex:1;padding:12px;border-radius:12px;border:none;font-weight:800;background:#fff;cursor:pointer}.tab.active{background:#facc15}
+.chip{display:inline-block;background:#f1f5f9;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:700;margin:2px}
+.hidden{display:none}.profile{display:flex;gap:12px;align-items:center}.avatar{width:56px;height:56px;background:#facc15;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900}
+.stat{flex:1;background:#f8fafc;padding:12px;border-radius:14px;text-align:center}.stat b{font-size:20px;display:block}
+.order{border:1px solid #e2e8f0;padding:12px;border-radius:14px;margin:8px 0}
+.status{padding:5px 10px;border-radius:20px;font-size:12px;font-weight:900;background:#dcfce7;color:#166534}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
 </style></head><body>
-<div class="top"><h2>🛵 SOSHANGUVE <b>RUSH</b></h2><p>By Nhlanhla - Ext 8a • Fast & Trusted</p></div>
-<div class="card"><h3>📦 Request Delivery</h3>
-<label>Your Name</label><input id="name" placeholder="Your name">
-<label>Your Phone</label><input id="phone" placeholder="082...">
-<label>What to COLLECT?</label><input id="item" placeholder="e.g. Sugar, Parcel, Documents">
-<label>Collect From</label><input id="from" placeholder="e.g. Shoprite Block L">
-<label>Deliver To</label><input id="to" placeholder="e.g. Ext 8a House...">
-<label>Size</label><select id="size" onchange="calc()"><option value="30">Small - R30</option><option value="50">Medium - R50</option><option value="70">Big - R70</option><option value="120">Far - R120</option></select>
-<label>Urgent?</label><select id="urgent" onchange="calc()"><option value="0">Normal 45 mins</option><option value="20">URGENT +R20</option></select>
-<div class="price" id="price">Total: R30 • Nhlanhla Earns: R30</div>
-<button class="btn" onclick="request()">🚀 REQUEST NHLANHLA NOW</button></div>
-<div class="card"><h3>🛵 Your Rider</h3><div class="rider"><span>👑 <b>Nhlanhla - Ext 8a</b><br>⭐ 5.0 | I Know Every Block<br>Walking + Taxi • Fast</span><span style="background:#22c55e;color:#fff;padding:5px 10px;border-radius:20px;font-size:12px">ONLINE</span></div></div>
-<div class="card"><h3>📊 Nhlanhla's Money Today</h3><p>Orders: <b id="orders">0</b> • Profit: <b id="profit">R0</b></p></div>
+<div class="top"><h2>🛵 SOSHANGUVE <b>RUSH</b> <span style="font-size:12px;background:#facc15;color:#000;padding:3px 7px;border-radius:6px">LOGISTICS</span></h2><p>By Nhlanhla • Ext 8a • Fast • Trusted • Professional</p></div>
+
+<!-- LOGIN / SIGNUP -->
+<div id="auth" class="card" style="margin-top:16px">
+<div style="text-align:center"><div style="font-size:48px">🛵</div><h2>Welcome to Soshanguve Rush</h2><p style="color:#64748b;font-size:13px">Create account to request delivery in 30 seconds</p></div>
+<div class="tabs" style="margin:12px 0"><button class="tab active" id="tabLogin" onclick="switchAuth('login')">🔐 LOGIN</button><button class="tab" id="tabSignup" onclick="switchAuth('signup')">✨ CREATE ACCOUNT</button></div>
+<div id="loginBox"><label>Phone Number</label><input id="loginPhone" placeholder="e.g. 082 123 4567"><label>Password</label><input id="loginPass" type="password" placeholder="Your password"><button class="btn" onclick="login()">🔐 LOGIN TO MY ACCOUNT</button><p style="text-align:center;font-size:12px;color:#64748b;margin-top:8px">Demo: Use any phone + any password to login</p></div>
+<div id="signupBox" class="hidden"><label>Full Name</label><input id="suName" placeholder="e.g. Thabo Mokoena"><label>Phone / WhatsApp</label><input id="suPhone" placeholder="082..."><label>Where do you live? (Block)</label><select id="suBlock"><option>Ext 8a</option><option>Block L</option><option>Block F</option><option>Block H</option><option>Block G</option><option>Block A</option><option>Mabopane</option><option>Other</option></select><label>Create Password</label><input id="suPass" type="password" placeholder="Choose password"><button class="btn btn3" onclick="signup()">✨ CREATE MY ACCOUNT - FREE</button><p style="text-align:center;font-size:12px;color:#64748b;margin-top:8px">By creating account you agree to pay on delivery.</p></div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+<div class="card"><div class="topbar"><div class="profile"><div class="avatar" id="avatar">N</div><div><b id="welcomeName">Hello, Customer</b><br><span style="font-size:12px;color:#64748b" id="welcomeBlock">Ext 8a • Member</span><br><span class="chip">⭐ 5.0 Rating</span><span class="chip">✅ Verified</span></div></div><button onclick="logout()" style="border:none;background:#fee2e2;padding:8px 12px;border-radius:10px;font-weight:800">Logout</button></div>
+<div style="display:flex;gap:10px;margin-top:12px"><div class="stat"><b id="statOrders">0</b><span style="font-size:12px">Orders</span></div><div class="stat"><b id="statSpent">R0</b><span style="font-size:12px">Spent</span></div><div class="stat"><b style="color:#22c55e">ONLINE</b><span style="font-size:12px">Nhlanhla</span></div></div></div>
+
+<div class="tabs"><button class="tab active" id="t1" onclick="showTab(1)">📦 REQUEST</button><button class="tab" id="t2" onclick="showTab(2)">📋 MY ORDERS</button><button class="tab" id="t3" onclick="showTab(3)">👤 PROFILE</button></div>
+
+<div id="tab1">
+<div class="card"><h3>📦 Request Delivery</h3><p style="font-size:13px;color:#64748b">Nhlanhla will collect & deliver for you.</p>
+<label>What to COLLECT?</label><input id="item" placeholder="e.g. Sugar, Parcel, Documents, Food">
+<div style="display:flex;gap:8px"><div style="flex:1"><label>Collect From</label><input id="from" placeholder="e.g. Shoprite Block L"></div><div style="flex:1"><label>Deliver To</label><input id="to" placeholder="e.g. Ext 8a House 123"></div></div>
+<label>Size & Price</label><select id="size" onchange="calc()"><option value="30">📄 Small - Bread / Docs - R30</option><option value="50">🛒 Medium - Groceries - R50</option><option value="70">📦 Big - Heavy / 2 Bags - R70</option><option value="120">🚕 Far - Mabopane / Pretoria North - R120</option></select>
+<label>Speed</label><select id="urgent" onchange="calc()"><option value="0">🐢 Normal - 45 mins - Free</option><option value="20">⚡ URGENT - 15 mins - +R20</option><option value="20">🌧️ Night / Rain - +R20</option></select>
+<label>Payment Method</label><select id="pay"><option>💵 Cash on Delivery</option><option>🏦 Capitec Transfer</option><option>📱 eWallet</option></select>
+<div class="price" id="price">Total: R30 • You Pay: R30</div>
+<button class="btn" onclick="request()">🚀 REQUEST NHLANHLA NOW</button>
+<p style="font-size:12px;text-align:center;color:#64748b;margin-top:8px">Nhlanhla will call you in 2 mins to confirm</p></div>
+<div class="card"><h3>🛵 Your Rider</h3><div class="rider"><span>👑 <b>Nhlanhla - Ext 8a</b><br>⭐ 5.0 • 120+ Deliveries • I Know Every Block<br><span style="font-size:12px">Walking + Taxi • Fast • Trusted</span></span><span class="badge">ONLINE</span></div></div>
+</div>
+
+<div id="tab2" class="hidden"><div class="card"><h3>📋 My Orders</h3><div id="orderList"><p style="color:#64748b;font-size:13px">No orders yet. Make your first request!</p></div></div>
+<div class="card"><h3>📊 Nhlanhla's Boss Dashboard</h3><p>Orders Today: <b id="orders">0</b> • Profit: <b id="profit">R0</b></p><p style="font-size:13px;color:#64748b">Solo Mode: Nhlanhla keeps 100%</p></div></div>
+
+<div id="tab3" class="hidden"><div class="card"><h3>⚙️ Settings & Profile</h3>
+<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin:6px 0"><span>🔔 Notifications</span><b>ON</b></div>
+<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin:6px 0"><span>📍 My Location</span><b>Ext 8a</b></div>
+<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin:6px 0"><span>🌙 Dark Mode</span><button onclick="document.body.style.background=document.body.style.background=='black'?'#0f172a':'black'">Toggle</button></div>
+<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin:6px 0"><span>💰 My Prices</span><b>R30 - R120</b></div>
+<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin:6px 0"><span>📞 Support</span><b>WhatsApp Nhlanhla</b></div>
+<button class="btn btn2" onclick="alert('Profile Saved!')">✅ SAVE PROFILE</button></div></div>
+</div>
+
 <script>
-let orders=0,profit=0;
-function calc(){let t=+document.getElementById('size').value + +document.getElementById('urgent').value;document.getElementById('price').innerText='Total: R'+t+' • Nhlanhla Earns: R'+t}
-function request(){let n=document.getElementById('name').value||'Customer';let item=document.getElementById('item').value||'Item';let from=document.getElementById('from').value||'Shop';let to=document.getElementById('to').value||'Home';let t=+document.getElementById('size').value + +document.getElementById('urgent').value;orders++;profit+=t;document.getElementById('orders').innerText=orders;document.getElementById('profit').innerText='R'+profit;alert('✅ SENT TO NHLANHLA!\n\n'+n+' wants: '+item+'\nFrom: '+from+'\nTo: '+to+'\nYou pay: R'+t+'\n\nNhlanhla from Ext 8a will call you in 2 mins.')}
+let orders=0,profit=0,spent=0;
+let currentUser=null;
+function switchAuth(m){document.getElementById('tabLogin').classList.toggle('active',m=='login');document.getElementById('tabSignup').classList.toggle('active',m=='signup');document.getElementById('loginBox').classList.toggle('hidden',m!='login');document.getElementById('signupBox').classList.toggle('hidden',m!='signup')}
+function signup(){let n=document.getElementById('suName').value||'Customer';let p=document.getElementById('suPhone').value;let b=document.getElementById('suBlock').value;if(!n||!p){alert('Please fill name + phone');return}currentUser={name:n,phone:p,block:b};localStorage.setItem('rushUser',JSON.stringify(currentUser));enterApp()}
+function login(){let p=document.getElementById('loginPhone').value||'082...';let saved=JSON.parse(localStorage.getItem('rushUser')||'null');currentUser=saved||{name:'Welcome Back',phone:p,block:'Ext 8a'};enterApp()}
+function enterApp(){document.getElementById('auth').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('welcomeName').innerText='Hello, '+currentUser.name;document.getElementById('welcomeBlock').innerText=currentUser.block+' • Member • '+currentUser.phone;document.getElementById('avatar').innerText=currentUser.name.charAt(0).toUpperCase();window.scrollTo(0,0)}
+function logout(){document.getElementById('app').classList.add('hidden');document.getElementById('auth').classList.remove('hidden')}
+function showTab(n){[1,2,3].forEach(i=>{document.getElementById('tab'+i).classList.toggle('hidden',i!=n);document.getElementById('t'+i).classList.toggle('active',i==n)})}
+function calc(){let t=+document.getElementById('size').value + +document.getElementById('urgent').value;document.getElementById('price').innerText='Total: R'+t+' • You Pay: R'+t}
+function request(){let item=document.getElementById('item').value||'Item';let from=document.getElementById('from').value||'Shop';let to=document.getElementById('to').value||'Home';let t=+document.getElementById('size').value + +document.getElementById('urgent').value;let pay=document.getElementById('pay').value;orders++;profit+=t;spent+=t;document.getElementById('orders').innerText=orders;document.getElementById('profit').innerText='R'+profit;document.getElementById('statOrders').innerText=orders;document.getElementById('statSpent').innerText='R'+spent;let div=document.createElement('div');div.className='order';div.innerHTML='<b>'+item+'</b> <span class="status">✅ Accepted by Nhlanhla</span><br><span style="font-size:13px;color:#64748b">From: '+from+' → To: '+to+'<br>Payment: '+pay+' • Total: R'+t+' • Nhlanhla is on the way!</span>';let list=document.getElementById('orderList');if(orders==1)list.innerHTML='';list.prepend(div);showTab(2);alert('✅ ORDER SENT TO NHLANHLA!\n\n'+item+'\nFrom: '+from+'\nTo: '+to+'\nTotal: R'+t+'\nPayment: '+pay+'\n\nNhlanhla from Ext 8a will call you in 2 mins.')}
 calc();
+let saved=JSON.parse(localStorage.getItem('rushUser')||'null');if(saved){currentUser=saved;enterApp()}
 </script></body></html>
