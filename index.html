@@ -1,0 +1,29 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOSHANGUVE RUSH - Nhlanhla</title><style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}body{background:#f1f5f9}
+.top{background:#111827;color:#fff;padding:14px;text-align:center}.top b{color:#facc15}
+.card{background:#fff;margin:12px;padding:14px;border-radius:14px;box-shadow:0 2px 8px #0002}
+input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:15px}
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-weight:900;font-size:17px;background:#facc15}
+.price{background:#fef9c3;padding:12px;border-radius:10px;text-align:center;font-weight:900;margin:8px 0}
+.rider{display:flex;justify-content:space-between;background:#fef9c3;padding:12px;border-radius:12px;border:2px solid #facc15}
+</style></head><body>
+<div class="top"><h2>🛵 SOSHANGUVE <b>RUSH</b></h2><p>By Nhlanhla - Ext 8a • Fast & Trusted</p></div>
+<div class="card"><h3>📦 Request Delivery</h3>
+<label>Your Name</label><input id="name" placeholder="Your name">
+<label>Your Phone</label><input id="phone" placeholder="082...">
+<label>What to COLLECT?</label><input id="item" placeholder="e.g. Sugar, Parcel, Documents">
+<label>Collect From</label><input id="from" placeholder="e.g. Shoprite Block L">
+<label>Deliver To</label><input id="to" placeholder="e.g. Ext 8a House...">
+<label>Size</label><select id="size" onchange="calc()"><option value="30">Small - R30</option><option value="50">Medium - R50</option><option value="70">Big - R70</option><option value="120">Far - R120</option></select>
+<label>Urgent?</label><select id="urgent" onchange="calc()"><option value="0">Normal 45 mins</option><option value="20">URGENT +R20</option></select>
+<div class="price" id="price">Total: R30 • Nhlanhla Earns: R30</div>
+<button class="btn" onclick="request()">🚀 REQUEST NHLANHLA NOW</button></div>
+<div class="card"><h3>🛵 Your Rider</h3><div class="rider"><span>👑 <b>Nhlanhla - Ext 8a</b><br>⭐ 5.0 | I Know Every Block<br>Walking + Taxi • Fast</span><span style="background:#22c55e;color:#fff;padding:5px 10px;border-radius:20px;font-size:12px">ONLINE</span></div></div>
+<div class="card"><h3>📊 Nhlanhla's Money Today</h3><p>Orders: <b id="orders">0</b> • Profit: <b id="profit">R0</b></p></div>
+<script>
+let orders=0,profit=0;
+function calc(){let t=+document.getElementById('size').value + +document.getElementById('urgent').value;document.getElementById('price').innerText='Total: R'+t+' • Nhlanhla Earns: R'+t}
+function request(){let n=document.getElementById('name').value||'Customer';let item=document.getElementById('item').value||'Item';let from=document.getElementById('from').value||'Shop';let to=document.getElementById('to').value||'Home';let t=+document.getElementById('size').value + +document.getElementById('urgent').value;orders++;profit+=t;document.getElementById('orders').innerText=orders;document.getElementById('profit').innerText='R'+profit;alert('✅ SENT TO NHLANHLA!\n\n'+n+' wants: '+item+'\nFrom: '+from+'\nTo: '+to+'\nYou pay: R'+t+'\n\nNhlanhla from Ext 8a will call you in 2 mins.')}
+calc();
+</script></body></html>
