@@ -1,0 +1,24 @@
+<!DOCTYPE html><html><body>
+<h2>Firebase Test</h2>
+<p id="msg">Testing...</p>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script>
+var firebaseConfig = {
+  apiKey: "PASTE-YOUR-APIKEY-HERE",
+  authDomain: "kasi-rush-be605.firebaseapp.com",
+  databaseURL: "https://kasi-rush-be605-default-rtdb.firebaseio.com",
+  projectId: "kasi-rush-be605",
+  storageBucket: "kasi-rush-be605.firebasestorage.app",
+  messagingSenderId: "PASTE-YOUR-SENDERID-HERE",
+  appId: "PASTE-YOUR-APPID-HERE"
+};
+try{
+  firebase.initializeApp(firebaseConfig);
+  firebase.database().ref('test').push({time: Date.now(), msg: "hello"}).then(()=>{
+    document.getElementById('msg').innerText = "✅ SUCCESS! Firebase WORKS!";
+  }).catch((e)=>{
+    document.getElementById('msg').innerText = "❌ FAILED: " + e.message;
+  });
+}catch(e){ document.getElementById('msg').innerText = "❌ ERROR: " + e.message; }
+</script></body></html>
