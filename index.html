@@ -1,90 +1,265 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SOSHANGUVE RUSH LOGISTICS - Nhlanhla</title>
-<style>*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial}body{background:#0f172a;color:#111}
-.top{background:#0f172a;color:#fff;padding:16px;text-align:center;position:sticky;top:0;z-index:10}.top b{color:#facc15}.top p{color:#94a3b8;font-size:12px}
-.card{background:#fff;margin:12px;padding:16px;border-radius:18px;box-shadow:0 4px 20px #0002}
-input,select{width:100%;padding:13px;margin:7px 0;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#f8fafc}
-label{font-size:13px;font-weight:700;color:#334155}
-.btn{width:100%;padding:15px;border:none;border-radius:14px;font-weight:900;font-size:16px;background:#facc15;cursor:pointer}
-.btn2{background:#0f172a;color:#fff}.btn3{background:#22c55e;color:#fff}
-.price{background:#fef9c3;padding:12px;border-radius:12px;text-align:center;font-weight:900;margin:10px 0}
-.rider{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#fef9c3,#fefce8);padding:14px;border-radius:14px;border:2px solid #facc15}
-.badge{background:#22c55e;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:900}
-.tabs{display:flex;gap:8px;margin:12px}.tab{flex:1;padding:12px;border-radius:12px;border:none;font-weight:800;background:#fff;cursor:pointer}.tab.active{background:#facc15}
-.chip{display:inline-block;background:#f1f5f9;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:700;margin:2px}
-.hidden{display:none}.profile{display:flex;gap:12px;align-items:center}.avatar{width:56px;height:56px;background:#facc15;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900}
-.stat{flex:1;background:#f8fafc;padding:12px;border-radius:14px;text-align:center}.stat b{font-size:20px;display:block}
-.order{border:1px solid #e2e8f0;padding:12px;border-radius:14px;margin:8px 0}
-.status{padding:5px 10px;border-radius:20px;font-size:12px;font-weight:900;background:#dcfce7;color:#166534}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
-</style></head><body>
-<div class="top"><h2>🛵 SOSHANGUVE <b>RUSH</b> <span style="font-size:12px;background:#facc15;color:#000;padding:3px 7px;border-radius:6px">LOGISTICS</span></h2><p>By Nhlanhla • Ext 8a • Fast • Trusted • Professional</p></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kasi Rush - Soshanguve Delivery</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0A0F1C;color:#fff;padding:12px;padding-bottom:40px}
+.header{background:#FFD500;color:#000;border-radius:18px;padding:20px;text-align:center}
+.header h1{font-size:36px;letter-spacing:1px}
+.header p{font-weight:bold;margin-top:4px}
+.sub{text-align:center;margin:12px 0;color:#FFD500;font-weight:bold}
+.card{background:#fff;color:#000;border-radius:16px;padding:16px;margin-bottom:12px}
+.card h2{font-size:20px;margin-bottom:10px}
+label{font-weight:bold;font-size:14px;display:block;margin-top:12px}
+input,select,textarea{width:100%;padding:13px;border:2px solid #ddd;border-radius:12px;font-size:16px;margin-top:5px;background:#f9f9f9}
+textarea{height:70px}
+.btn{width:100%;background:#FFD500;color:#000;border:none;padding:17px;border-radius:14px;font-size:18px;font-weight:900;margin-top:14px;cursor:pointer}
+.btn-green{background:#0a9e4a;color:#fff}
+.price-box{background:#FFD500;color:#000;border-radius:12px;padding:12px;margin-top:12px;text-align:center;font-weight:bold}
+#map{height:300px;width:100%;border-radius:16px;border:4px solid #FFD500;margin:12px 0}
+.bar{height:10px;background:#ddd;border-radius:10px;overflow:hidden;margin:10px 0}
+#progress{height:100%;width:5%;background:#FFD500;transition:width 0.5s}
+.rider-row{display:flex;align-items:center;gap:12px}
+.avatar{width:58px;height:58px;background:#FFD500;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
+.hidden{display:none}
+.code-box{background:#FFD500;color:#000;border-radius:14px;padding:16px;margin-top:12px;text-align:center;border:3px solid #000}
+.qr-wrap{background:#fff;padding:12px;border-radius:12px;display:inline-block;margin:10px 0}
+#pickupCode{font-size:54px;font-weight:900;letter-spacing:12px}
+.small{font-size:13px;color:#555}
+.center{text-align:center}
+</style>
+</head>
+<body>
 
-<div id="auth" class="card" style="margin-top:16px">
-<div style="text-align:center"><div style="font-size:48px">🛵</div><h2>Welcome to Soshanguve Rush</h2><p style="color:#64748b;font-size:13px">Create account to request delivery in 30 seconds</p></div>
-<div class="tabs" style="margin:12px 0"><button class="tab active" id="tabLogin" onclick="switchAuth('login')">🔐 LOGIN</button><button class="tab" id="tabSignup" onclick="switchAuth('signup')">✨ CREATE ACCOUNT</button></div>
-<div id="loginBox"><label>Phone Number</label><input id="loginPhone" placeholder="e.g. 082 123 4567"><label>Password</label><input id="loginPass" type="password" placeholder="Your password"><button class="btn" onclick="login()">🔐 LOGIN TO MY ACCOUNT</button><p style="text-align:center;font-size:12px;color:#64748b;margin-top:8px">Demo: Use any phone + any password to login</p></div>
-<div id="signupBox" class="hidden"><label>Full Name</label><input id="suName" placeholder="e.g. Thabo Mokoena"><label>Phone / WhatsApp</label><input id="suPhone" placeholder="082..."><label>Where do you live? (Block)</label><select id="suBlock"><option>Ext 8a</option><option>Block L</option><option>Block F</option><option>Block H</option><option>Block G</option><option>Block A</option><option>Mabopane</option><option>Other</option></select><label>Create Password</label><input id="suPass" type="password" placeholder="Choose password"><button class="btn btn3" onclick="signup()">✨ CREATE MY ACCOUNT - FREE</button></div>
+<!-- ===== TOP ===== -->
+<div class="header">
+  <h1>🛵 KASI RUSH</h1>
+  <p>FROM SOSHANGUVE, FOR SOSHANGUVE</p>
+  <p style="font-size:13px;margin-top:8px">Food • Groceries • Parcels • Documents • Anything!</p>
+</div>
+<p class="sub">⚡ Fast Delivery in 30-45 mins • From R30 • Cash / E-Wallet</p>
+
+<!-- ===== ORDER FORM ===== -->
+<div class="card" id="orderCard">
+  <h2>📦 Place Your Delivery Order</h2>
+
+  <label>Your Name</label>
+  <input id="custName" placeholder="e.g. Thabo">
+
+  <label>Your Phone Number</label>
+  <input id="custPhone" placeholder="e.g. 071 123 4567">
+
+  <label>Pickup From - Where Do We Collect?</label>
+  <input id="pickupAddr" placeholder="e.g. Shoprite Soshanguve Crossing / Your House / Spaza">
+
+  <label>Deliver To - Your Address / Gate</label>
+  <input id="dropAddr" placeholder="e.g. Ext 8a, Block L, House 123">
+
+  <label>What Should We Deliver?</label>
+  <select id="itemType">
+    <option>Food / Kota / Takeaway</option>
+    <option>Groceries</option>
+    <option>Parcel / Package</option>
+    <option>Documents</option>
+    <option>Clothes / Shoes</option>
+    <option>Medicine / Pharmacy</option>
+    <option>Other - I will explain below</option>
+  </select>
+
+  <label>Details - What is inside? / What shop? / How much is it?</label>
+  <textarea id="itemDetails" placeholder="e.g. Please buy 2x Kota from Mama's Kota, R85. Or: Please collect a small brown parcel from my sister."></textarea>
+
+  <label>Delivery Area</label>
+  <select id="area" onchange="calcPrice()">
+    <option value="30">Ext 8a to Ext 8a - R30</option>
+    <option value="40">Ext 8a to Block L / F / G - R40</option>
+    <option value="50">Ext 8a to Soshanguve Crossing / Central - R50</option>
+    <option value="80">Soshanguve to Mabopane / Pretoria North - R80</option>
+  </select>
+
+  <div class="price-box" id="priceText">Delivery Fee: R30 • Pay on delivery</div>
+
+  <button class="btn" onclick="placeOrder()">📦 REQUEST DELIVERY</button>
+  <p class="center small" style="margin-top:8px">After you request, your tracking + pickup code will appear below - inside this app.</p>
 </div>
 
-<div id="app" class="hidden">
-<div class="card"><div class="topbar"><div class="profile"><div class="avatar" id="avatar">N</div><div><b id="welcomeName">Hello, Customer</b><br><span style="font-size:12px;color:#64748b" id="welcomeBlock">Ext 8a • Member</span><br><span class="chip">⭐ 5.0 Rating</span><span class="chip">✅ Verified</span></div></div><button onclick="logout()" style="border:none;background:#fee2e2;padding:8px 12px;border-radius:10px;font-weight:800">Logout</button></div>
-<div style="display:flex;gap:10px;margin-top:12px"><div class="stat"><b id="statOrders">0</b><span style="font-size:12px">Orders</span></div><div class="stat"><b id="statSpent">R0</b><span style="font-size:12px">Spent</span></div><div class="stat"><b style="color:#22c55e">ONLINE</b><span style="font-size:12px">Nhlanhla</span></div></div></div>
+<!-- ===== TRACKING + PICKUP CODE - INSIDE APP ===== -->
+<div id="trackScreen" class="hidden">
+  <div class="card" style="background:#FFD500;text-align:center">
+    <h2>🛵 YOUR ORDER IS ON THE WAY!</h2>
+    <p id="orderSummary" style="font-weight:bold">Order received</p>
+  </div>
 
-<div class="tabs"><button class="tab active" id="t1" onclick="showTab(1)">📦 REQUEST</button><button class="tab" id="t2" onclick="showTab(2)">📋 MY ORDERS</button><button class="tab" id="t3" onclick="showTab(3)">👤 PROFILE</button></div>
+  <div class="card">
+    <h2>📍 WATCH IT COME TO YOUR GATE</h2>
+    <div id="map"></div>
+    <b id="distText" style="font-size:20px">🟢 1.2 km away · about 4 min</b>
+    <div class="bar"><div id="progress"></div></div>
+    <p class="center" style="font-weight:bold">PICKUP → ON THE WAY → YOUR GATE</p>
+    <button class="btn btn-green" onclick="startDelivery()">▶ START DELIVERY - MOVE RIDER</button>
+  </div>
 
-<div id="tab1">
-<div class="card"><h3>📦 Request Delivery</h3><p style="font-size:13px;color:#64748b">Nhlanhla will collect & deliver for you.</p>
-<label>What to COLLECT? *</label><input id="item" placeholder="e.g. Sugar, Parcel, Documents, Food">
-<div style="display:flex;gap:8px"><div style="flex:1"><label>Collect From *</label><input id="from" placeholder="e.g. Shoprite Block L"></div><div style="flex:1"><label>Deliver To *</label><input id="to" placeholder="e.g. Ext 8a House 123"></div></div>
-<label>Size & Price</label><select id="size" onchange="calc()"><option value="30">📄 Small - Bread / Docs - R30</option><option value="50">🛒 Medium - Groceries - R50</option><option value="70">📦 Big - Heavy / 2 Bags - R70</option><option value="120">🚕 Far - Mabopane / Pretoria North - R120</option></select>
-<label>Speed</label><select id="urgent" onchange="calc()"><option value="0">🐢 Normal - 45 mins - Free</option><option value="20">⚡ URGENT - 15 mins - +R20</option><option value="20">🌧️ Night / Rain - +R20</option></select>
-<label>Payment Method</label><select id="pay"><option>💵 Cash on Delivery</option><option>🏦 Capitec Transfer</option><option>📱 eWallet</option></select>
-<div class="price" id="price">Total: R30 • You Pay: R30</div>
-<button class="btn" onclick="request()">🚀 REQUEST NHLANHLA NOW</button>
-<p style="font-size:12px;text-align:center;color:#64748b;margin-top:8px">This will open WhatsApp to send order DIRECT to Nhlanhla</p></div>
-<div class="card"><h3>🛵 Your Rider</h3><div class="rider"><span>👑 <b>Nhlanhla - Ext 8a</b><br>⭐ 5.0 • 120+ Deliveries • I Know Every Block<br><span style="font-size:12px">Walking + Taxi • Fast • Trusted</span></span><span class="badge">ONLINE</span></div></div>
-</div>
+  <div class="card">
+    <h2>YOUR RIDER</h2>
+    <div class="rider-row">
+      <div class="avatar">🛵</div>
+      <div style="flex:1"><b style="font-size:18px">Nhlanhla - Kasi Rush</b><br><small>Scooter • Soshanguve Ext 8a • ⭐ 5.0 • Fast & Safe</small></div>
+      <!-- CHANGE THIS NUMBER TO YOUR REAL NUMBER -->
+      <a href="tel:+277XXXXXXXXX" style="background:#0a9e4a;color:#fff;padding:12px;border-radius:12px;text-decoration:none;font-size:22px">📞</a>
+    </div>
+  </div>
 
-<div id="tab2" class="hidden"><div class="card"><h3>📋 My Orders</h3><div id="orderList"><p style="color:#64748b;font-size:13px">No orders yet. Make your first request!</p></div></div>
-<div class="card"><h3>📊 Nhlanhla's Boss Dashboard</h3><p>Orders Today: <b id="orders">0</b> • Profit: <b id="profit">R0</b></p><p style="font-size:13px;color:#64748b">Solo Mode: Nhlanhla keeps 100%</p></div></div>
+  <!-- ===== SECRET PICKUP CODE ===== -->
+  <div class="card">
+    <div class="code-box">
+      <h3 style="font-size:22px">🔒 NO CODE, NO HANDOVER</h3>
+      <p style="font-size:14px;margin:6px 0">Your rider is coming to you now. Keep your phone close.<br>Show this code to your rider at the gate to receive your delivery.</p>
+      
+      <div class="qr-wrap">
+        <img id="qrImg" src="" alt="QR Code" style="width:180px;height:180px;display:block">
+      </div>
+      <p style="font-size:13px">OR READ OUT THIS NUMBER:</p>
+      <div id="pickupCode">----</div>
+      <p id="codeTimer" style="font-weight:bold">New code in 10:00</p>
+      <p style="font-size:12px">Only the person with this code can receive the parcel.<br>Don't share it with anyone else. The rider will only hand over your order when the code matches.</p>
+      <button onclick="makeNewCode()" style="background:#000;color:#FFD500;border:none;padding:10px 18px;border-radius:10px;font-weight:900;margin-top:8px">↻ GET NEW CODE</button>
+    </div>
 
-<div id="tab3" class="hidden"><div class="card"><h3>⚙️ Settings & Profile</h3>
-<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin:6px 0"><span>🔔 Notifications</span><b>ON</b></div>
-<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin:6px 0"><span>📍 My Location</span><b id="profileBlock">Ext 8a</b></div>
-<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin:6px 0"><span>💰 My Prices</span><b>R30 - R120</b></div>
-<div style="display:flex;justify-content:space-between;padding:12px;background:#f8fafc;border-radius:12px;margin:6px 0"><span>📞 Support</span><b>WhatsApp Nhlanhla - 0672739660</b></div>
-<button class="btn btn2" onclick="alert('Profile Saved!')">✅ SAVE PROFILE</button></div></div>
+    <div style="background:#f2f2f2;border-radius:12px;padding:14px;margin-top:12px;text-align:center">
+      <b>👨‍🍳 RIDER: ENTER CUSTOMER CODE HERE</b><br>
+      <input id="riderInput" inputmode="numeric" maxlength="4" placeholder="Enter 4 digits" style="width:180px;text-align:center;letter-spacing:8px;font-size:22px;font-weight:900;background:#fff">
+      <br>
+      <button onclick="checkCode()" style="background:#0a9e4a;color:#fff;border:none;padding:14px 22px;border-radius:12px;font-weight:900;font-size:16px;margin-top:8px">✅ CONFIRM HANDOVER</button>
+      <p id="codeResult" style="font-weight:900;margin-top:10px"></p>
+      <p class="small">Rider: If code is wrong, DO NOT hand over the order. Ask customer to show the code on their phone again.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>DELIVERING TO</h2>
+    <p><b id="showDrop">Your Address</b></p>
+    <p class="small" id="showPickup">Pickup: -</p>
+    <p style="margin-top:8px">Order: <b id="showItem">-</b></p>
+  </div>
+
+  <!-- CHANGE THIS NUMBER TO YOUR REAL NUMBER: 27 + number without 0 -->
+  <button class="btn btn-green" onclick="sendWhatsApp()">💬 SEND ORDER TO KASI RUSH ON WHATSAPP</button>
+  <button class="btn" onclick="location.reload()">➕ PLACE ANOTHER ORDER</button>
 </div>
 
 <script>
-let orders=0,profit=0,spent=0;
-let currentUser=null;
-function switchAuth(m){document.getElementById('tabLogin').classList.toggle('active',m=='login');document.getElementById('tabSignup').classList.toggle('active',m=='signup');document.getElementById('loginBox').classList.toggle('hidden',m!='login');document.getElementById('signupBox').classList.toggle('hidden',m!='signup')}
-function signup(){let n=document.getElementById('suName').value.trim();let p=document.getElementById('suPhone').value.trim();let b=document.getElementById('suBlock').value;if(!n||!p){alert('Please fill name + phone');return}currentUser={name:n,phone:p,block:b};localStorage.setItem('rushUser',JSON.stringify(currentUser));enterApp()}
-function login(){let p=document.getElementById('loginPhone').value||'082...';let saved=JSON.parse(localStorage.getItem('rushUser')||'null');currentUser=saved||{name:'Welcome Back',phone:p,block:'Ext 8a'};enterApp()}
-function enterApp(){document.getElementById('auth').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('welcomeName').innerText='Hello, '+currentUser.name;document.getElementById('welcomeBlock').innerText=currentUser.block+' • Member • '+currentUser.phone;document.getElementById('profileBlock').innerText=currentUser.block;document.getElementById('avatar').innerText=currentUser.name.charAt(0).toUpperCase();window.scrollTo(0,0)}
-function logout(){document.getElementById('app').classList.add('hidden');document.getElementById('auth').classList.remove('hidden')}
-function showTab(n){[1,2,3].forEach(i=>{document.getElementById('tab'+i).classList.toggle('hidden',i!=n);document.getElementById('t'+i).classList.toggle('active',i==n)})}
-function calc(){let t=+document.getElementById('size').value + +document.getElementById('urgent').value;document.getElementById('price').innerText='Total: R'+t+' • You Pay: R'+t}
-function request(){
-let item=document.getElementById('item').value.trim();
-let from=document.getElementById('from').value.trim();
-let to=document.getElementById('to').value.trim();
-if(!item){alert('⚠️ Please write WHAT to collect - e.g. Sugar');document.getElementById('item').focus();return}
-if(!from){alert('⚠️ Please write where to COLLECT FROM - e.g. Spar');document.getElementById('from').focus();return}
-if(!to){alert('⚠️ Please write where to DELIVER TO - e.g. 17576 Ext 8a');document.getElementById('to').focus();return}
-let t=+document.getElementById('size').value + +document.getElementById('urgent').value;
-let pay=document.getElementById('pay').value;
-let sizeText=document.getElementById('size').options[document.getElementById('size').selectedIndex].text;
-orders++;profit+=t;spent+=t;
-document.getElementById('orders').innerText=orders;document.getElementById('profit').innerText='R'+profit;document.getElementById('statOrders').innerText=orders;document.getElementById('statSpent').innerText='R'+spent;
-let div=document.createElement('div');div.className='order';div.innerHTML='<b>'+item+'</b> <span class="status">✅ Sent to Nhlanhla on WhatsApp</span><br><span style="font-size:13px;color:#64748b">From: '+from+' → To: '+to+'<br>'+sizeText+'<br>Payment: '+pay+' • Total: R'+t+' • Nhlanhla will call you!</span>';
-let list=document.getElementById('orderList');if(orders==1)list.innerHTML='';list.prepend(div);showTab(2);
-let msg='🛵 *NEW SOSHANGUVE RUSH ORDER*%0A%0A👤 Customer: '+encodeURIComponent(currentUser?currentUser.name:'Customer')+'%0A📞 Phone: '+encodeURIComponent(currentUser?currentUser.phone:'')+'%0A📦 Item: '+encodeURIComponent(item)+'%0A📍 From: '+encodeURIComponent(from)+'%0A🏠 To: '+encodeURIComponent(to)+'%0A💰 Total: R'+t+'%0A💳 Payment: '+encodeURIComponent(pay)+'%0A%0APlease confirm, Nhlanhla!';
-window.open('https://wa.me/27672739660?text='+msg,'_blank');
-alert('✅ SENT TO NHLANHLA ON WHATSAPP!\n\nWhatsApp opened. Press SEND to send it to Nhlanhla.\n\nOrder: '+item+' From '+from+' To '+to+' - R'+t);
+function calcPrice(){
+  let fee = document.getElementById('area').value;
+  document.getElementById('priceText').innerText = 'Delivery Fee: R' + fee + ' • Pay on delivery';
 }
-calc();
-let saved=JSON.parse(localStorage.getItem('rushUser')||'null');if(saved){currentUser=saved;enterApp()}
-</script></body></html>
+
+function placeOrder(){
+  let name = document.getElementById('custName').value || 'Customer';
+  let drop = document.getElementById('dropAddr').value || 'Your Address, Soshanguve';
+  let pickup = document.getElementById('pickupAddr').value || 'Pickup location';
+  let type = document.getElementById('itemType').value;
+  let details = document.getElementById('itemDetails').value || 'No extra details';
+  let fee = document.getElementById('area').value;
+
+  document.getElementById('orderSummary').innerText = 'Hi ' + name + ' • ' + type + ' • Delivery R' + fee;
+  document.getElementById('showDrop').innerText = drop;
+  document.getElementById('showPickup').innerText = 'Pickup: ' + pickup;
+  document.getElementById('showItem').innerText = type + ' - ' + details;
+
+  document.getElementById('trackScreen').classList.remove('hidden');
+  document.getElementById('trackScreen').scrollIntoView({behavior:'smooth'});
+  showTrack();
+}
+
+function sendWhatsApp(){
+  let name = document.getElementById('custName').value || 'Customer';
+  let phone = document.getElementById('custPhone').value || '';
+  let pickup = document.getElementById('pickupAddr').value || '';
+  let drop = document.getElementById('dropAddr').value || '';
+  let type = document.getElementById('itemType').value;
+  let details = document.getElementById('itemDetails').value || '';
+  let fee = document.getElementById('area').value;
+  let msg = '🛵 NEW KASI RUSH ORDER\n\nName: ' + name + '\nPhone: ' + phone + '\nPickup: ' + pickup + '\nDeliver To: ' + drop + '\nWhat: ' + type + '\nDetails: ' + details + '\nDelivery Fee: R' + fee + '\nPickup Code: ' + currentCode;
+  // CHANGE THIS NUMBER TO YOUR REAL WHATSAPP NUMBER
+  window.open('https://wa.me/277XXXXXXXXX?text=' + encodeURIComponent(msg));
+}
+
+// ===== TRACKING + CODE LOGIC =====
+let mapStarted = false, riderMarker, map, currentCode = "", timerSec = 600, timerInt;
+
+function makeNewCode(){
+  currentCode = String(Math.floor(1000 + Math.random()*9000));
+  document.getElementById('pickupCode').innerText = currentCode;
+  document.getElementById('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=KASI-RUSH-' + currentCode;
+  document.getElementById('codeResult').innerText = '';
+  timerSec = 600;
+}
+
+function startTimer(){
+  clearInterval(timerInt);
+  timerInt = setInterval(()=>{
+    timerSec--;
+    if(timerSec <= 0){ makeNewCode(); }
+    let m = Math.floor(timerSec/60), s = String(timerSec%60).padStart(2,'0');
+    document.getElementById('codeTimer').innerText = 'New code in ' + m + ':' + s;
+  }, 1000);
+}
+
+function checkCode(){
+  let entered = document.getElementById('riderInput').value.trim();
+  let res = document.getElementById('codeResult');
+  if(entered === currentCode && currentCode !== ""){
+    res.style.color = 'green'; res.innerText = '✅ CORRECT! HAND OVER THE ORDER / PARCEL NOW!';
+    alert('✅ CODE CORRECT! Safe handover - give the parcel / order to customer.');
+  } else {
+    res.style.color = 'red'; res.innerText = '❌ WRONG CODE! DO NOT HAND OVER THE ORDER!';
+    alert('❌ WRONG CODE! Ask customer to show the code on their phone again.');
+  }
+}
+
+function showTrack(){
+  if(currentCode === ""){ makeNewCode(); startTimer(); }
+  if(!mapStarted){
+    mapStarted = true;
+    const shop = [-25.516, 28.105];
+    const home = [-25.525, 28.118];
+    // Map needs a tiny delay to load inside hidden div
+    setTimeout(()=>{
+      map = L.map('map').setView([-25.520, 28.111], 14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+      L.marker(shop).addTo(map).bindPopup('🏪 Pickup Point');
+      L.marker(home).addTo(map).bindPopup('🏠 Your Gate');
+      riderMarker = L.marker(shop, {icon: L.divIcon({html:'<div style="font-size:32px">🛵</div>', iconSize:[32,32]})}).addTo(map);
+      window._shop = shop; window._home = home;
+    }, 300);
+  }
+}
+
+let progress = 0;
+function startDelivery(){
+  if(!window._shop){ alert('Wait 2 seconds for map to load, then press again'); return; }
+  let lat = window._shop[0], lng = window._shop[1];
+  const move = setInterval(()=>{
+    progress += 2;
+    lat += (window._home[0]-window._shop[0])/50;
+    lng += (window._home[1]-window._shop[1])/50;
+    riderMarker.setLatLng([lat,lng]); map.panTo([lat,lng]);
+    document.getElementById('progress').style.width = progress + '%';
+    let km = (1.2 * (1-progress/100)).toFixed(1);
+    let mins = Math.max(1, Math.ceil(4 * (1-progress/100)));
+    document.getElementById('distText').innerText = '🟢 ' + km + ' km away · about ' + mins + ' min';
+    if(progress >= 100){
+      clearInterval(move);
+      document.getElementById('distText').innerText = '🛵 AT YOUR GATE! Show your code to receive your order!';
+      alert('RIDER AT YOUR GATE! Show your code!');
+    }
+  }, 300);
+}
+</script>
+</body>
+  </html>
