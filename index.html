@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kasi Rush - Fast Delivery</title>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <style>
 *{box-sizing:border-box;font-family:Arial,sans-serif}
 body{margin:0;background:#0f0f0f;color:#fff}
@@ -129,26 +131,28 @@ input:focus{border-color:#ffcc00}
 
 <script>
 // ========================================================
+// 🔥 FIREBASE KEYS - ADDED ONLY, DESIGN NOT CHANGED
+// Go to Firebase > Project Settings > Your apps > copy your config
+// and paste your real apiKey / messagingSenderId / appId below
+// ========================================================
+var firebaseConfig = {
+  apiKey: "PASTE-YOUR-APIKEY-HERE",
+  authDomain: "kasi-rush-be605.firebaseapp.com",
+  databaseURL: "https://kasi-rush-be605-default-rtdb.firebaseio.com",
+  projectId: "kasi-rush-be605",
+  storageBucket: "kasi-rush-be605.firebasestorage.app",
+  messagingSenderId: "PASTE-YOUR-SENDERID-HERE",
+  appId: "PASTE-YOUR-APPID-HERE"
+};
+firebase.initializeApp(firebaseConfig);
+// ========================================================
 // ⚙️ SETTINGS - CHANGE THIS ONE NUMBER
 // Put the DRIVER WhatsApp number here, e.g. 27711234567 (country code + number, no + , no spaces)
 // ========================================================
-const DRIVER_WHATSAPP = "27710000000"; // <-- CHANGE TO YOUR DRIVER NUMBER
+const DRIVER_WHATSAPP = "27672739660"; // <-- YOUR NUMBER 0672739660
 
 // ========================================================
 // 🏪 SHOPS - ADD SHOPS HERE AFTER YOU TALK TO THEM
-// HOW TO ADD A SHOP:
-// Copy this block and paste it below:
-// {
-//   id: "shop2",
-//   name: "Shop Name",
-//   area: "Soshanguve",
-//   desc: "What they sell",
-//   items: [
-//     { name: "Item Name", price: "" },
-//     { name: "Item 2", price: "" }
-//   ]
-// },
-// Leave price as "" for now. We add real prices later.
 // ========================================================
 const SHOPS = [
   {
@@ -161,8 +165,6 @@ const SHOPS = [
       { name: "Example Item 2", price: "" }
     ]
   }
-  // 👇 PASTE YOUR REAL SHOPS HERE AFTER TALKING TO THEM 👇
-
 ];
 
 // ========================================================
@@ -182,18 +184,14 @@ function showTab(t){
 function getUsers(){ return JSON.parse(localStorage.getItem('kasi_users')||'{}'); }
 function saveUsers(u){ localStorage.setItem('kasi_users', JSON.stringify(u)); }
 
-// --- CREATE ACCOUNT: password = letters + numbers, min 4 ---
 function createAccount(){
   const name = document.getElementById('regName').value.trim();
   const phone = document.getElementById('regPhone').value.trim().replace(/\s/g,'');
   const address = document.getElementById('regAddress').value.trim();
-  const pass = document.getElementById('regPass').value; // keep as typed, no trim inside
-
+  const pass = document.getElementById('regPass').value;
   if(!name || !phone || !address){ showMsg("Please fill in Name, Phone and Address"); return; }
   if(!pass || pass.length < 4){ showMsg("Password must be at least 4 characters. You can use letters + numbers, e.g. Thabo123"); return; }
-  // Allow letters, numbers, any characters - NOT numbers only
   if(!/^[A-Za-z0-9@#_.\-!]+$/.test(pass)){ showMsg("Password can use letters, numbers and @ # _ . - !"); return; }
-
   let users = getUsers();
   users[phone] = { name, phone, address, pass };
   saveUsers(users);
@@ -228,7 +226,6 @@ function logout(){
   location.reload();
 }
 
-// --- SHOPS ---
 function renderShops(){
   const el = document.getElementById('shopList');
   if(SHOPS.length===0){ el.innerHTML = "<p class='mut'>No shops yet. We are talking to shops now. Check back soon.</p>"; return; }
@@ -279,6 +276,7 @@ function placeOrder(){
     items: cart,
     status: "NEW - Sent to Driver",
     time: new Date().toLocaleString(),
+    createdAt: Date.now(),
     deliveryFee: "From R30",
     total: "To be confirmed"
   };
@@ -292,6 +290,9 @@ function placeOrder(){
   let inbox = JSON.parse(localStorage.getItem('kasi_driver_inbox')||'[]');
   inbox.unshift(order);
   localStorage.setItem('kasi_driver_inbox', JSON.stringify(inbox));
+
+  // 🔥 ADDED ONLY: Save to Firebase so Driver App on ANY phone sees it LIVE
+  firebase.database().ref('orders').push(order);
 
   // Build WhatsApp message to driver - THIS IS THE LINK
   let msg = `🛵 NEW KASI RUSH ORDER ${code}\n\nCustomer: ${order.customer}\nPhone: ${order.phone}\nAddress: ${order.address}\nNote: ${note || "None"}\n\nItems:\n` + cart.map(c=>`- ${c.shop} - ${c.name}`).join('\n') + `\n\nDelivery: From R30\nTotal: To be confirmed\nTime: ${order.time}`;
@@ -325,7 +326,6 @@ function renderMyOrders(){
   `).join('');
 }
 
-// Auto-login if saved
 window.onload = ()=>{
   let phone = localStorage.getItem('kasi_current');
   let users = getUsers();
