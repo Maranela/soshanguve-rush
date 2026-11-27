@@ -20,6 +20,8 @@ input,select,textarea{width:100%;padding:13px;border:2px solid #ddd;border-radiu
 textarea{height:70px}
 .btn{width:100%;background:#FFD500;color:#000;border:none;padding:17px;border-radius:14px;font-size:18px;font-weight:900;margin-top:14px;cursor:pointer}
 .btn-green{background:#0a9e4a;color:#fff}
+.btn-dark{background:#000;color:#FFD500}
+.btn-white{background:#fff;color:#000;border:2px solid #000}
 .price-box{background:#FFD500;color:#000;border-radius:12px;padding:12px;margin-top:12px;text-align:center;font-weight:bold}
 #map{height:300px;width:100%;border-radius:16px;border:4px solid #FFD500;margin:12px 0}
 .bar{height:10px;background:#ddd;border-radius:10px;overflow:hidden;margin:10px 0}
@@ -32,132 +34,214 @@ textarea{height:70px}
 #pickupCode{font-size:54px;font-weight:900;letter-spacing:12px}
 .small{font-size:13px;color:#555}
 .center{text-align:center}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1;padding:12px;border-radius:12px;border:none;font-weight:900;font-size:16px;cursor:pointer}
+.tabs button.active{background:#FFD500;color:#000}
+.tabs button.inactive{background:#ddd;color:#333}
+.welcome{background:#FFD500;color:#000;border-radius:12px;padding:12px;text-align:center;font-weight:bold;margin-bottom:12px}
 </style>
 </head>
 <body>
 
-<!-- ===== TOP ===== -->
 <div class="header">
   <h1>🛵 KASI RUSH</h1>
   <p>FROM SOSHANGUVE, FOR SOSHANGUVE</p>
   <p style="font-size:13px;margin-top:8px">Food • Groceries • Parcels • Documents • Anything!</p>
 </div>
-<p class="sub">⚡ Fast Delivery in 30-45 mins • From R30 • Cash / E-Wallet</p>
 
-<!-- ===== ORDER FORM ===== -->
-<div class="card" id="orderCard">
-  <h2>📦 Place Your Delivery Order</h2>
+<!-- ===== LOGIN / CREATE ACCOUNT - FIRST SCREEN ===== -->
+<div id="authScreen">
+  <p class="sub">⚡ Fast Delivery in 30-45 mins • From R30 • Cash / E-Wallet</p>
+  <div class="card">
+    <h2>👋 Welcome to Kasi Rush</h2>
+    <p class="small">Create an account once, then order in 1 minute every time. Your details will be saved on your phone.</p>
 
-  <label>Your Name</label>
-  <input id="custName" placeholder="e.g. Thabo">
+    <div class="tabs">
+      <button id="tabCreate" class="active" onclick="switchTab('create')">CREATE ACCOUNT</button>
+      <button id="tabLogin" class="inactive" onclick="switchTab('login')">LOGIN</button>
+    </div>
 
-  <label>Your Phone Number</label>
-  <input id="custPhone" placeholder="e.g. 071 123 4567">
+    <!-- CREATE -->
+    <div id="createForm">
+      <label>Your Full Name</label>
+      <input id="regName" placeholder="e.g. Thabo Mokoena">
+      <label>Your Phone Number</label>
+      <input id="regPhone" placeholder="e.g. 071 123 4567">
+      <label>Your Address / Block</label>
+      <input id="regAddr" placeholder="e.g. Ext 8a, Block L, House 123">
+      <label>Create a Password (4 digits is fine)</label>
+      <input id="regPass" type="password" inputmode="numeric" placeholder="e.g. 1234">
+      <button class="btn" onclick="doCreate()">✅ CREATE MY ACCOUNT</button>
+      <p class="center small" style="margin-top:8px">Already have an account? Tap LOGIN above.</p>
+    </div>
 
-  <label>Pickup From - Where Do We Collect?</label>
-  <input id="pickupAddr" placeholder="e.g. Shoprite Soshanguve Crossing / Your House / Spaza">
-
-  <label>Deliver To - Your Address / Gate</label>
-  <input id="dropAddr" placeholder="e.g. Ext 8a, Block L, House 123">
-
-  <label>What Should We Deliver?</label>
-  <select id="itemType">
-    <option>Food / Kota / Takeaway</option>
-    <option>Groceries</option>
-    <option>Parcel / Package</option>
-    <option>Documents</option>
-    <option>Clothes / Shoes</option>
-    <option>Medicine / Pharmacy</option>
-    <option>Other - I will explain below</option>
-  </select>
-
-  <label>Details - What is inside? / What shop? / How much is it?</label>
-  <textarea id="itemDetails" placeholder="e.g. Please buy 2x Kota from Mama's Kota, R85. Or: Please collect a small brown parcel from my sister."></textarea>
-
-  <label>Delivery Area</label>
-  <select id="area" onchange="calcPrice()">
-    <option value="30">Ext 8a to Ext 8a - R30</option>
-    <option value="40">Ext 8a to Block L / F / G - R40</option>
-    <option value="50">Ext 8a to Soshanguve Crossing / Central - R50</option>
-    <option value="80">Soshanguve to Mabopane / Pretoria North - R80</option>
-  </select>
-
-  <div class="price-box" id="priceText">Delivery Fee: R30 • Pay on delivery</div>
-
-  <button class="btn" onclick="placeOrder()">📦 REQUEST DELIVERY</button>
-  <p class="center small" style="margin-top:8px">After you request, your tracking + pickup code will appear below - inside this app.</p>
+    <!-- LOGIN -->
+    <div id="loginForm" class="hidden">
+      <label>Your Phone Number</label>
+      <input id="logPhone" placeholder="e.g. 071 123 4567">
+      <label>Your Password</label>
+      <input id="logPass" type="password" inputmode="numeric" placeholder="Your password">
+      <button class="btn btn-green" onclick="doLogin()">🔓 LOGIN</button>
+      <button class="btn btn-white" onclick="switchTab('create')">No account yet? CREATE ONE</button>
+      <p class="center small" style="margin-top:8px">Forgot password? Create a new account with same phone - it will overwrite.</p>
+    </div>
+    <p id="authMsg" class="center" style="font-weight:900;margin-top:10px"></p>
+  </div>
 </div>
 
-<!-- ===== TRACKING + PICKUP CODE - INSIDE APP ===== -->
-<div id="trackScreen" class="hidden">
-  <div class="card" style="background:#FFD500;text-align:center">
-    <h2>🛵 YOUR ORDER IS ON THE WAY!</h2>
-    <p id="orderSummary" style="font-weight:bold">Order received</p>
+<!-- ===== MAIN APP - HIDDEN UNTIL LOGIN ===== -->
+<div id="mainApp" class="hidden">
+  <div class="welcome" id="welcomeText">Welcome!</div>
+  <button onclick="doLogout()" style="background:transparent;color:#FFD500;border:1px solid #FFD500;padding:8px 14px;border-radius:10px;font-weight:bold;margin-bottom:12px;float:right">Logout</button>
+  <div style="clear:both"></div>
+
+  <!-- ORDER FORM -->
+  <div class="card" id="orderCard">
+    <h2>📦 Place Your Delivery Order</h2>
+    <label>Your Name</label>
+    <input id="custName" placeholder="e.g. Thabo">
+    <label>Your Phone Number</label>
+    <input id="custPhone" placeholder="e.g. 071 123 4567">
+    <label>Pickup From - Where Do We Collect?</label>
+    <input id="pickupAddr" placeholder="e.g. Shoprite Soshanguve Crossing / Your House / Spaza">
+    <label>Deliver To - Your Address / Gate</label>
+    <input id="dropAddr" placeholder="e.g. Ext 8a, Block L, House 123">
+    <label>What Should We Deliver?</label>
+    <select id="itemType">
+      <option>Food / Kota / Takeaway</option>
+      <option>Groceries</option>
+      <option>Parcel / Package</option>
+      <option>Documents</option>
+      <option>Clothes / Shoes</option>
+      <option>Medicine / Pharmacy</option>
+      <option>Other - I will explain below</option>
+    </select>
+    <label>Details - What is inside? / What shop? / How much is it?</label>
+    <textarea id="itemDetails" placeholder="e.g. Please buy 2x Kota from Mama's Kota, R85. Or: Please collect a small brown parcel from my sister."></textarea>
+    <label>Delivery Area</label>
+    <select id="area" onchange="calcPrice()">
+      <option value="30">Ext 8a to Ext 8a - R30</option>
+      <option value="40">Ext 8a to Block L / F / G - R40</option>
+      <option value="50">Ext 8a to Soshanguve Crossing / Central - R50</option>
+      <option value="80">Soshanguve to Mabopane / Pretoria North - R80</option>
+    </select>
+    <div class="price-box" id="priceText">Delivery Fee: R30 • Pay on delivery</div>
+    <button class="btn" onclick="placeOrder()">📦 REQUEST DELIVERY</button>
+    <p class="center small" style="margin-top:8px">After you request, your tracking + pickup code will appear below - inside this app.</p>
   </div>
 
-  <div class="card">
-    <h2>📍 WATCH IT COME TO YOUR GATE</h2>
-    <div id="map"></div>
-    <b id="distText" style="font-size:20px">🟢 1.2 km away · about 4 min</b>
-    <div class="bar"><div id="progress"></div></div>
-    <p class="center" style="font-weight:bold">PICKUP → ON THE WAY → YOUR GATE</p>
-    <button class="btn btn-green" onclick="startDelivery()">▶ START DELIVERY - MOVE RIDER</button>
-  </div>
-
-  <div class="card">
-    <h2>YOUR RIDER</h2>
-    <div class="rider-row">
-      <div class="avatar">🛵</div>
-      <div style="flex:1"><b style="font-size:18px">Nhlanhla - Kasi Rush</b><br><small>Scooter • Soshanguve Ext 8a • ⭐ 5.0 • Fast & Safe</small></div>
-      <!-- CHANGE THIS NUMBER TO YOUR REAL NUMBER -->
-      <a href="tel:+277XXXXXXXXX" style="background:#0a9e4a;color:#fff;padding:12px;border-radius:12px;text-decoration:none;font-size:22px">📞</a>
+  <!-- TRACKING + PICKUP CODE -->
+  <div id="trackScreen" class="hidden">
+    <div class="card" style="background:#FFD500;text-align:center">
+      <h2>🛵 YOUR ORDER IS ON THE WAY!</h2>
+      <p id="orderSummary" style="font-weight:bold">Order received</p>
     </div>
-  </div>
-
-  <!-- ===== SECRET PICKUP CODE ===== -->
-  <div class="card">
-    <div class="code-box">
-      <h3 style="font-size:22px">🔒 NO CODE, NO HANDOVER</h3>
-      <p style="font-size:14px;margin:6px 0">Your rider is coming to you now. Keep your phone close.<br>Show this code to your rider at the gate to receive your delivery.</p>
-      
-      <div class="qr-wrap">
-        <img id="qrImg" src="" alt="QR Code" style="width:180px;height:180px;display:block">
+    <div class="card">
+      <h2>📍 WATCH IT COME TO YOUR GATE</h2>
+      <div id="map"></div>
+      <b id="distText" style="font-size:20px">🟢 1.2 km away · about 4 min</b>
+      <div class="bar"><div id="progress"></div></div>
+      <p class="center" style="font-weight:bold">PICKUP → ON THE WAY → YOUR GATE</p>
+      <button class="btn btn-green" onclick="startDelivery()">▶ START DELIVERY - MOVE RIDER</button>
+    </div>
+    <div class="card">
+      <h2>YOUR RIDER</h2>
+      <div class="rider-row">
+        <div class="avatar">🛵</div>
+        <div style="flex:1"><b style="font-size:18px">Nhlanhla - Kasi Rush</b><br><small>Scooter • Soshanguve Ext 8a • ⭐ 5.0 • Fast & Safe</small></div>
+        <!-- CHANGE THIS NUMBER -->
+        <a href="tel:+277XXXXXXXXX" style="background:#0a9e4a;color:#fff;padding:12px;border-radius:12px;text-decoration:none;font-size:22px">📞</a>
       </div>
-      <p style="font-size:13px">OR READ OUT THIS NUMBER:</p>
-      <div id="pickupCode">----</div>
-      <p id="codeTimer" style="font-weight:bold">New code in 10:00</p>
-      <p style="font-size:12px">Only the person with this code can receive the parcel.<br>Don't share it with anyone else. The rider will only hand over your order when the code matches.</p>
-      <button onclick="makeNewCode()" style="background:#000;color:#FFD500;border:none;padding:10px 18px;border-radius:10px;font-weight:900;margin-top:8px">↻ GET NEW CODE</button>
     </div>
-
-    <div style="background:#f2f2f2;border-radius:12px;padding:14px;margin-top:12px;text-align:center">
-      <b>👨‍🍳 RIDER: ENTER CUSTOMER CODE HERE</b><br>
-      <input id="riderInput" inputmode="numeric" maxlength="4" placeholder="Enter 4 digits" style="width:180px;text-align:center;letter-spacing:8px;font-size:22px;font-weight:900;background:#fff">
-      <br>
-      <button onclick="checkCode()" style="background:#0a9e4a;color:#fff;border:none;padding:14px 22px;border-radius:12px;font-weight:900;font-size:16px;margin-top:8px">✅ CONFIRM HANDOVER</button>
-      <p id="codeResult" style="font-weight:900;margin-top:10px"></p>
-      <p class="small">Rider: If code is wrong, DO NOT hand over the order. Ask customer to show the code on their phone again.</p>
+    <div class="card">
+      <div class="code-box">
+        <h3 style="font-size:22px">🔒 NO CODE, NO HANDOVER</h3>
+        <p style="font-size:14px;margin:6px 0">Your rider is coming to you now. Keep your phone close.<br>Show this code to your rider at the gate to receive your delivery.</p>
+        <div class="qr-wrap"><img id="qrImg" src="" alt="QR Code" style="width:180px;height:180px;display:block"></div>
+        <p style="font-size:13px">OR READ OUT THIS NUMBER:</p>
+        <div id="pickupCode">----</div>
+        <p id="codeTimer" style="font-weight:bold">New code in 10:00</p>
+        <p style="font-size:12px">Only the person with this code can receive the parcel / order.<br>Don't share it with anyone else. The rider will only hand over your order when the code matches.</p>
+        <button onclick="makeNewCode()" style="background:#000;color:#FFD500;border:none;padding:10px 18px;border-radius:10px;font-weight:900;margin-top:8px">↻ GET NEW CODE</button>
+      </div>
+      <div style="background:#f2f2f2;border-radius:12px;padding:14px;margin-top:12px;text-align:center">
+        <b>👨‍🍳 RIDER: ENTER CUSTOMER CODE HERE</b><br>
+        <input id="riderInput" inputmode="numeric" maxlength="4" placeholder="Enter 4 digits" style="width:180px;text-align:center;letter-spacing:8px;font-size:22px;font-weight:900;background:#fff">
+        <br>
+        <button onclick="checkCode()" style="background:#0a9e4a;color:#fff;border:none;padding:14px 22px;border-radius:12px;font-weight:900;font-size:16px;margin-top:8px">✅ CONFIRM HANDOVER</button>
+        <p id="codeResult" style="font-weight:900;margin-top:10px"></p>
+        <p class="small">Rider: If code is wrong, DO NOT hand over the order / parcel. Ask customer to show the code on their phone again.</p>
+      </div>
     </div>
+    <div class="card">
+      <h2>DELIVERING TO</h2>
+      <p><b id="showDrop">Your Address</b></p>
+      <p class="small" id="showPickup">Pickup: -</p>
+      <p style="margin-top:8px">Order: <b id="showItem">-</b></p>
+    </div>
+    <button class="btn btn-green" onclick="sendWhatsApp()">💬 SEND ORDER TO KASI RUSH ON WHATSAPP</button>
+    <button class="btn" onclick="location.reload()">➕ PLACE ANOTHER ORDER</button>
   </div>
-
-  <div class="card">
-    <h2>DELIVERING TO</h2>
-    <p><b id="showDrop">Your Address</b></p>
-    <p class="small" id="showPickup">Pickup: -</p>
-    <p style="margin-top:8px">Order: <b id="showItem">-</b></p>
-  </div>
-
-  <!-- CHANGE THIS NUMBER TO YOUR REAL NUMBER: 27 + number without 0 -->
-  <button class="btn btn-green" onclick="sendWhatsApp()">💬 SEND ORDER TO KASI RUSH ON WHATSAPP</button>
-  <button class="btn" onclick="location.reload()">➕ PLACE ANOTHER ORDER</button>
 </div>
 
 <script>
+// ===== LOGIN / CREATE LOGIC =====
+function switchTab(which){
+  document.getElementById('createForm').classList.toggle('hidden', which!=='create');
+  document.getElementById('loginForm').classList.toggle('hidden', which!=='login');
+  document.getElementById('tabCreate').className = which==='create' ? 'active' : 'inactive';
+  document.getElementById('tabLogin').className = which==='login' ? 'active' : 'inactive';
+  document.getElementById('authMsg').innerText = '';
+}
+function cleanPhone(p){ return p.replace(/\s/g,''); }
+function doCreate(){
+  let name = document.getElementById('regName').value.trim();
+  let phone = cleanPhone(document.getElementById('regPhone').value.trim());
+  let addr = document.getElementById('regAddr').value.trim();
+  let pass = document.getElementById('regPass').value.trim();
+  if(!name || !phone || !pass){ document.getElementById('authMsg').style.color='red'; document.getElementById('authMsg').innerText='Please fill Name, Phone and Password'; return; }
+  let user = {name:name, phone:phone, addr:addr, pass:pass};
+  localStorage.setItem('kasi_user_' + phone, JSON.stringify(user));
+  localStorage.setItem('kasi_logged_in', phone);
+  showMain(user);
+}
+function doLogin(){
+  let phone = cleanPhone(document.getElementById('logPhone').value.trim());
+  let pass = document.getElementById('logPass').value.trim();
+  let saved = localStorage.getItem('kasi_user_' + phone);
+  if(!saved){ document.getElementById('authMsg').style.color='red'; document.getElementById('authMsg').innerText='No account found for this number. Please CREATE ACCOUNT first.'; return; }
+  let user = JSON.parse(saved);
+  if(user.pass !== pass){ document.getElementById('authMsg').style.color='red'; document.getElementById('authMsg').innerText='Wrong password. Try again.'; return; }
+  localStorage.setItem('kasi_logged_in', phone);
+  showMain(user);
+}
+function showMain(user){
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('mainApp').classList.remove('hidden');
+  document.getElementById('welcomeText').innerText = 'Welcome back, ' + user.name + ' 👋';
+  document.getElementById('custName').value = user.name;
+  document.getElementById('custPhone').value = user.phone;
+  document.getElementById('dropAddr').value = user.addr || '';
+  window.scrollTo(0,0);
+}
+function doLogout(){
+  localStorage.removeItem('kasi_logged_in');
+  location.reload();
+}
+// Auto-login if they already created account before
+window.onload = function(){
+  let phone = localStorage.getItem('kasi_logged_in');
+  if(phone){
+    let saved = localStorage.getItem('kasi_user_' + phone);
+    if(saved){ showMain(JSON.parse(saved)); }
+  }
+};
+
+// ===== ORDER + PRICE =====
 function calcPrice(){
   let fee = document.getElementById('area').value;
   document.getElementById('priceText').innerText = 'Delivery Fee: R' + fee + ' • Pay on delivery';
 }
-
 function placeOrder(){
   let name = document.getElementById('custName').value || 'Customer';
   let drop = document.getElementById('dropAddr').value || 'Your Address, Soshanguve';
@@ -165,17 +249,14 @@ function placeOrder(){
   let type = document.getElementById('itemType').value;
   let details = document.getElementById('itemDetails').value || 'No extra details';
   let fee = document.getElementById('area').value;
-
   document.getElementById('orderSummary').innerText = 'Hi ' + name + ' • ' + type + ' • Delivery R' + fee;
   document.getElementById('showDrop').innerText = drop;
   document.getElementById('showPickup').innerText = 'Pickup: ' + pickup;
   document.getElementById('showItem').innerText = type + ' - ' + details;
-
   document.getElementById('trackScreen').classList.remove('hidden');
   document.getElementById('trackScreen').scrollIntoView({behavior:'smooth'});
   showTrack();
 }
-
 function sendWhatsApp(){
   let name = document.getElementById('custName').value || 'Customer';
   let phone = document.getElementById('custPhone').value || '';
@@ -185,13 +266,12 @@ function sendWhatsApp(){
   let details = document.getElementById('itemDetails').value || '';
   let fee = document.getElementById('area').value;
   let msg = '🛵 NEW KASI RUSH ORDER\n\nName: ' + name + '\nPhone: ' + phone + '\nPickup: ' + pickup + '\nDeliver To: ' + drop + '\nWhat: ' + type + '\nDetails: ' + details + '\nDelivery Fee: R' + fee + '\nPickup Code: ' + currentCode;
-  // CHANGE THIS NUMBER TO YOUR REAL WHATSAPP NUMBER
+  // CHANGE THIS NUMBER
   window.open('https://wa.me/277XXXXXXXXX?text=' + encodeURIComponent(msg));
 }
 
-// ===== TRACKING + CODE LOGIC =====
+// ===== TRACKING + CODE =====
 let mapStarted = false, riderMarker, map, currentCode = "", timerSec = 600, timerInt;
-
 function makeNewCode(){
   currentCode = String(Math.floor(1000 + Math.random()*9000));
   document.getElementById('pickupCode').innerText = currentCode;
@@ -199,7 +279,6 @@ function makeNewCode(){
   document.getElementById('codeResult').innerText = '';
   timerSec = 600;
 }
-
 function startTimer(){
   clearInterval(timerInt);
   timerInt = setInterval(()=>{
@@ -209,7 +288,6 @@ function startTimer(){
     document.getElementById('codeTimer').innerText = 'New code in ' + m + ':' + s;
   }, 1000);
 }
-
 function checkCode(){
   let entered = document.getElementById('riderInput').value.trim();
   let res = document.getElementById('codeResult');
@@ -221,14 +299,12 @@ function checkCode(){
     alert('❌ WRONG CODE! Ask customer to show the code on their phone again.');
   }
 }
-
 function showTrack(){
   if(currentCode === ""){ makeNewCode(); startTimer(); }
   if(!mapStarted){
     mapStarted = true;
     const shop = [-25.516, 28.105];
     const home = [-25.525, 28.118];
-    // Map needs a tiny delay to load inside hidden div
     setTimeout(()=>{
       map = L.map('map').setView([-25.520, 28.111], 14);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
@@ -239,7 +315,6 @@ function showTrack(){
     }, 300);
   }
 }
-
 let progress = 0;
 function startDelivery(){
   if(!window._shop){ alert('Wait 2 seconds for map to load, then press again'); return; }
@@ -262,4 +337,4 @@ function startDelivery(){
 }
 </script>
 </body>
-  </html>
+          </html>
